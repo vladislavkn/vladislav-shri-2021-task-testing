@@ -7,8 +7,7 @@ const log = (text) => console.log(`[auto-start-selenium]: ${text}`);
 
 module.exports = (hermione, opts) => {
   const pingUrl = "http://localhost:4444/wd/hub/status";
-  const pollInterval = opts.pollInterval || 500;
-  const maxTime = opts.maxTime || 5000;
+  const { pollInterval = 500, maxTime = 5000 } = opts;
 
   const stopSeleniumServer = () => {
     opts.seleniumSubprocess.kill();
