@@ -1,10 +1,13 @@
 const { assert } = require("chai");
 
 describe("Общие требования: ", () => {
+  beforeEach(async ({ browser }) => {
+    await browser.url("http://localhost:3000/hw/store");
+  });
+
   describe("Вёрстка должна адаптироваться под ширину экрана", async function () {
     async function checkIfHasHorizontalScroll(browser, width) {
       await browser.setWindowSize(width, 1280);
-      await browser.url("http://localhost:3000/hw/store");
       await browser.waitUntil(
         () => browser.execute(() => document.readyState === "complete"),
         {
@@ -26,6 +29,7 @@ describe("Общие требования: ", () => {
         this.browser,
         1400
       );
+
       assert.isFalse(hasHorizontalScroll);
     });
 
@@ -55,7 +59,6 @@ describe("Общие требования: ", () => {
   });
 
   it("В шапке отображаются ссылки на страницы магазина", async function () {
-    await this.browser.url("http://localhost:3000/hw/store");
     const navbar = await this.browser.$("nav.navbar");
     await navbar.waitForExist();
     await navbar.scrollIntoView();
@@ -79,52 +82,47 @@ describe("Общие требования: ", () => {
   });
 
   it("название магазина в шапке должно быть ссылкой на главную страницу", async function () {
-    await this.browser.url("http://localhost:3000/hw/store");
     const title = await this.browser.$(".Application-Brand.navbar-brand");
     await title.waitForExist();
 
     assert.equal(await title.getAttribute("href"), "/hw/store/");
   });
 
-  // it('на ширине меньше 576px навигационное меню должно скрываться за "гамбургер"', async function () {
-  //   await this.browser.url("http://localhost:3000/hw/store");
-  //   const menu = await this.browser.$(".Application-Menu.navbar-collapse");
-  //   const toggler = await this.browser.$(".Application-Toggler.navbar-toggler");
+  it('на ширине меньше 576px навигационное меню должно скрываться за "гамбургер"', async function () {
+    const menu = await this.browser.$(".Application-Menu.navbar-collapse");
+    const toggler = await this.browser.$(".Application-Toggler.navbar-toggler");
 
-  //   await this.browser.setWindowSize(576, 1280);
-  //   await menu.waitForExist();
-  //   await menu.scrollIntoView();
-  //   assert.isTrue(await menu.isDisplayed());
-  //   await toggler.waitForExist();
-  //   await toggler.scrollIntoView();
-  //   assert.isFalse(await toggler.isDisplayed());
+    await this.browser.setWindowSize(576, 1280);
 
-  //   await this.browser.setWindowSize(575, 1280);
-  //   assert.isFalse(await menu.isDisplayed());
-  //   await toggler.waitForExist();
-  //   await toggler.scrollIntoView();
-  //   assert.isTrue(await toggler.isDisplayed());
-  // });
+    await menu.waitForExist();
+    assert.isTrue(await menu.isDisplayed());
+    await toggler.waitForExist();
+    assert.isFalse(await toggler.isDisplayed());
 
-  // it('при выборе элемента из меню "гамбургера", меню должно закрываться.', async function () {
-  //   await this.browser.url("http://localhost:3000/hw/store");
-  //   await this.browser.setWindowSize(575, 1280);
+    await this.browser.setWindowSize(575, 1280);
 
-  //   const menu = await this.browser.$(".Application-Menu.navnar-collapse");
-  //   const link = await this.browser.$(
-  //     ".navbar-nav a[href='/hw/store/catalog']"
-  //   );
-  //   const toggler = await this.browser.$(".Application-Toggler.navbar-toggler");
+    assert.isFalse(await menu.isDisplayed());
+    await toggler.waitForExist();
+    assert.isTrue(await toggler.isDisplayed());
+  });
 
-  //   await toggler.waitForExist();
-  //   await toggler.scrollIntoView();
-  //   await toggler.click();
-  //   await link.waitForExist();
-  //   await link.scrollIntoView();
-  //   await link.click();
+  it('при выборе элемента из меню "гамбургера", меню должно закрываться.', async function () {
+    await this.browser.setWindowSize(575, 1280);
 
-  //   await menu.waitForExist();
-  //   await menu.scrollIntoView();
-  //   assert.isFalse(await menu.isDisplayed());
-  // });
+    const menu = await this.browser.$(".Application-Menu.navnar-collapse");
+    const link = await this.browser.$(
+      ".navbar-nav a[href='/hw/store/catalog']"
+    );
+    const toggler = await this.browser.$(".Application-Toggler.navbar-toggler");
+
+    await toggler.waitForExist();
+    await toggler.waitForClickable();
+    await toggler.click();
+
+    await link.waitForExist();
+    await link.waitForClickable();
+    await link.click();
+
+    assert.isFalse(await menu.isDisplayed());
+  });
 });
