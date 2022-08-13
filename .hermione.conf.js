@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: `http://localhost:${PORT}/hw/store`,
   sets: {
     all: {
-      files: "test/hermione",
+      files: "./test/hermione/*.hermione.js",
     },
   },
   browsers: {
