@@ -1,0 +1,17 @@
+{
+  "name": "hermione-auto-start-selenium",
+  "version": "1.0.0",
+  "description": "Hermione plugin that starts selenium server automatically when tests starts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hermione"
+  ],
+  "author": "Vladislav Knyshov <inova136@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "hermione": "^5.0.1"
+  }
+}
