@@ -3,6 +3,7 @@ const PORT = Number(process.env.PORT) || 3000;
 
 module.exports = {
   baseUrl: `http://localhost:${PORT}/hw/store`,
+  testsPerSession: 1,
   sets: {
     all: {
       files: "./test/hermione/*.hermione.js",
@@ -28,6 +29,9 @@ module.exports = {
     "hermione-auto-start-selenium": {
       maxTime: 10000,
       pollInterval: 1000,
+    },
+    "html-reporter/hermione": {
+      path: "hermione-html-report",
     },
   },
 };
