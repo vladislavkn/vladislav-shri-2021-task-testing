@@ -4,7 +4,8 @@
   "scripts": {
     "start": "nodemon ./src/server/index.ts",
     "test:unit": "jest",
-    "test:integration": "./node_modules/.bin/hermione --set all",
+    "hermione": "./node_modules/.bin/hermione --set all",
+    "hermione:gui": "./node_modules/.bin/hermione gui --set all",
     "build": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch"
   },
@@ -15,6 +16,7 @@
     "chai": "^4.3.4",
     "express": "^4.17.1",
     "faker": "^5.5.3",
+    "html-reporter": "^9.2.0",
     "immer": "^9.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
