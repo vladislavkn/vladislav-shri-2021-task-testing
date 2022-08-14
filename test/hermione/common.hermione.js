@@ -1,79 +1,73 @@
 const { assert } = require("chai");
+const { pages } = require("./utils");
 
-describe("Общие требования: ", () => {
+describe("Общие требования -", () => {
   beforeEach(async ({ browser }) => {
-    await browser.url("http://localhost:3000/hw/store");
+    await browser.url(pages.HOME);
   });
 
-  describe("Вёрстка должна адаптироваться под ширину экрана", async function () {
-    async function checkIfHasHorizontalScroll(browser, width) {
-      await browser.setWindowSize(width, 1280);
-      await browser.waitUntil(
-        () => browser.execute(() => document.readyState === "complete"),
-        {
-          timeout: 60 * 1000,
-          timeoutMsg: "Browser did not load in 60s",
-        }
-      );
-      const res = await browser.execute(
-        () =>
-          document.documentElement.scrollWidth >
-          document.documentElement.clientWidth,
-        []
-      );
-      return Boolean(res);
-    }
+  async function checkIfHasHorizontalScroll({ browser, width }) {
+    await browser.setWindowSize(width, 1280);
+    await browser.waitUntil(
+      () => browser.execute(() => document.readyState === "complete"),
+      {
+        timeout: 60 * 1000,
+        timeoutMsg: "Browser did not load in 60s",
+      }
+    );
+    return await browser.execute(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+      []
+    );
+  }
 
-    it("1400px", async function () {
-      const hasHorizontalScroll = await checkIfHasHorizontalScroll(
-        this.browser,
-        1400
-      );
-
-      assert.isFalse(hasHorizontalScroll);
+  it("Вёрстка должна адаптироваться под ширину экрана", async ({ browser }) => {
+    const hasHorizontalScrollOn1400 = await checkIfHasHorizontalScroll({
+      browser,
+      width: 1400,
     });
 
-    it("992px", async function () {
-      const hasHorizontalScroll = await checkIfHasHorizontalScroll(
-        this.browser,
-        992
-      );
-      assert.isFalse(hasHorizontalScroll);
+    const hasHorizontalScrollOn992 = await checkIfHasHorizontalScroll({
+      browser,
+      width: 992,
     });
 
-    it("576px", async function () {
-      const hasHorizontalScroll = await checkIfHasHorizontalScroll(
-        this.browser,
-        576
-      );
-      assert.isFalse(hasHorizontalScroll);
+    const hasHorizontalScrollOn576 = await checkIfHasHorizontalScroll({
+      browser,
+      width: 576,
     });
 
-    it("360px", async function () {
-      const hasHorizontalScroll = await checkIfHasHorizontalScroll(
-        this.browser,
-        360
-      );
-      assert.isFalse(hasHorizontalScroll);
+    const hasHorizontalScrollOn360 = await checkIfHasHorizontalScroll({
+      browser,
+      width: 360,
     });
+
+    assert.isFalse(hasHorizontalScrollOn1400);
+    assert.isFalse(hasHorizontalScrollOn992);
+    assert.isFalse(hasHorizontalScrollOn576);
+    assert.isFalse(hasHorizontalScrollOn360);
   });
 
   it("В шапке отображаются ссылки на страницы магазина", async function () {
-    const navbar = await this.browser.$("nav.navbar");
-    await navbar.waitForExist();
-    await navbar.scrollIntoView();
-
     const catalogLink = await this.browser.$(
       ".nav-link[href='/hw/store/catalog']"
     );
+    await catalogLink.waitForExist();
 
     const deliveryLink = await this.browser.$(
       ".nav-link[href='/hw/store/delivery']"
     );
+    await deliveryLink.waitForExist();
+
     const contactsLink = await this.browser.$(
       ".nav-link[href='/hw/store/contacts']"
     );
+    await contactsLink.waitForExist();
+
     const cartLink = await this.browser.$(".nav-link[href='/hw/store/cart']");
+    await cartLink.waitForExist();
 
     assert.isTrue(await catalogLink.isExisting());
     assert.isTrue(await deliveryLink.isExisting());
